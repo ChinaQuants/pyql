@@ -1,3 +1,6 @@
+# coding: utf-8
+
+from __future__ import unicode_literals
 
 cimport quantlib.time._daycounter as _daycounter
 cimport quantlib.time.daycounters._thirty360 as _th
@@ -39,7 +42,10 @@ Italian convention: starting dates or ending dates that
 occur on February and are grater than 27 become equal to 30
 for computational sake.
 
-Valid names for 30/360 daycounts are:\n{}
+Valid names for 30/360 daycounts are:
+
+* {}
+
 
 """
 
@@ -49,14 +55,14 @@ cdef class Thirty360(DayCounter):
         '30/360({})'.format(convention ) for convention in CONVENTIONS
     ]
     __doc__ =  DOC_TEMPLATE.format(
-        '\n'.join(_valid_names)
+        '\n* '.join(_valid_names)
     )
 
     def __cinit__(self, convention=BONDBASIS):
         self._thisptr = <_daycounter.DayCounter*> new \
             _th.Thirty360(<_th.Convention> convention)
 
-cdef _daycounter.DayCounter* from_name(str name, str convention):
+cdef _daycounter.DayCounter* from_name(str convention):
 
     cdef _th.Convention ql_convention = <_th.Convention>CONVENTIONS[convention]
 

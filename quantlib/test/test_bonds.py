@@ -5,18 +5,19 @@ from quantlib.instruments.bonds import (
 )
 from quantlib.pricingengines.bond import DiscountingBondEngine
 from quantlib.time.calendar import (
-    TARGET, Unadjusted, ModifiedFollowing, Following
+    Unadjusted, ModifiedFollowing, Following
 )
 from quantlib.time.calendars.united_states import (
     UnitedStates, GOVERNMENTBOND, SETTLEMENT
 )
 from quantlib.time.calendars.null_calendar import NullCalendar
+from quantlib.time.calendars.target import TARGET
 from quantlib.compounding import Compounded, Continuous
 from quantlib.time.date import (
     Date, Days, Semiannual, January, August, Period, March, February,Oct,Nov,
     Jul, Annual, Years, Quarterly
 )
-from quantlib.time.daycounter import Actual365Fixed, Actual360
+from quantlib.time.daycounters.simple import Actual365Fixed, Actual360
 from quantlib.time.daycounters.actual_actual import ActualActual, Bond, ISMA
 from quantlib.time.schedule import Schedule, Backward
 from quantlib.settings import Settings
@@ -186,11 +187,11 @@ class BondTestCase(unittest.TestCase):
         bond.set_pricing_engine(engine)
 
 
-        self.assertEquals(Date(10, Jul, 2016), termination_date)
-        self.assertEquals(
+        self.assertEqual(Date(10, Jul, 2016), termination_date)
+        self.assertEqual(
             calendar.advance(todays_date, 3, Days), bond.settlement_date()
         )
-        self.assertEquals(Date(11, Jul, 2016), bond.maturity_date)
+        self.assertEqual(Date(11, Jul, 2016), bond.maturity_date)
         self.assertAlmostEqual(
             0.6849, bond.accrued_amount(bond.settlement_date()), 4
         )
@@ -226,11 +227,11 @@ class BondTestCase(unittest.TestCase):
 
         bond.set_pricing_engine(engine)
         
-        self.assertEquals(
+        self.assertEqual(
             calendar.advance(todays_date, 3, Days), bond.settlement_date()
         )
-        self.assertEquals(0., bond.accrued_amount(bond.settlement_date()))
-        self.assertAlmostEquals(57.6915, bond.clean_price, 4)
+        self.assertEqual(0., bond.accrued_amount(bond.settlement_date()))
+        self.assertAlmostEqual(57.6915, bond.clean_price, 4)
     def test_excel_example_with_floating_rate_bond(self):
         
         todays_date = Date(25, August, 2011)
@@ -300,11 +301,11 @@ class BondTestCase(unittest.TestCase):
         set_coupon_pricer(float_bond,coupon_pricer)
         
 
-        self.assertEquals(Date(10, Jul, 2016), termination_date)
-        self.assertEquals(
+        self.assertEqual(Date(10, Jul, 2016), termination_date)
+        self.assertEqual(
             calendar.advance(todays_date, 3, Days), float_bond.settlement_date()
         )
-        self.assertEquals(Date(11, Jul, 2016), float_bond.maturity_date)
+        self.assertEqual(Date(11, Jul, 2016), float_bond.maturity_date)
         self.assertAlmostEqual(
             0.6944, float_bond.accrued_amount(float_bond.settlement_date()), 4
         )

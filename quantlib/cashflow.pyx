@@ -1,12 +1,10 @@
-"""
- Copyright (C) 2013, Enthought Inc
- Copyright (C) 2013, Patrick Henaff
- Copyright (c) 2012 BG Research LLC
-
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
-"""
+# Copyright (C) 2013, Enthought Inc
+# Copyright (C) 2013, Patrick Henaff
+# Copyright (c) 2012 BG Research LLC
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 cimport _cashflow as _cf
 cimport quantlib.time._date as _date
@@ -66,7 +64,7 @@ cdef class SimpleCashFlow(CashFlow):
             self.amount, self.date
         )
 
-cdef object leg_items(vector[shared_ptr[_cf.CashFlow]] leg):
+cdef leg_items(vector[shared_ptr[_cf.CashFlow]] leg):
     """
     Returns a list of (amount, pydate)
     """

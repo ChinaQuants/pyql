@@ -1,11 +1,9 @@
-"""
- Copyright (C) 2011, Enthought Inc
- Copyright (C) 2011, Patrick Henaff
-
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
-"""
+# Copyright (C) 2011, Enthought Inc
+# Copyright (C) 2011, Patrick Henaff
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 # Cython standard cimports
 from cython.operator cimport dereference as deref, preincrement as inc
@@ -17,9 +15,6 @@ cimport quantlib.time._calendar as _calendar
 cimport quantlib.time._date as _date
 cimport quantlib.time.date as date
 cimport quantlib.time._period as _period
-
-# PyQL cimports
-from quantlib.util.compat cimport py_string_from_utf8_array
 
 # BusinessDayConvention:
 cdef public enum BusinessDayConvention:
@@ -47,7 +42,7 @@ cdef class Calendar:
 
     property name:
         def __get__(self):
-            return py_string_from_utf8_array(self._thisptr.name().c_str())
+            return self._thisptr.name().decode('utf-8')
 
     def __str__(self):
         return self.name
@@ -157,7 +152,7 @@ cdef class DateList:
     def __cinit__(self):
         self._pos = 0
 
-    cdef _set_dates(self, vector[_date.Date]& dates):
+    cdef _set_dates(self, const vector[_date.Date]& dates):
         # fixme : would be great to be able to do that at construction time ...
         # but Cython does not allow to pass C object in the __cinit__ method
         self._dates = new vector[_date.Date](dates)
@@ -194,22 +189,3 @@ def holiday_list(Calendar calendar, date.Date from_date, date.Date to_date,
     t = DateList()
     t._set_dates(dates)
     return t
-
-cdef class TARGET(Calendar):
-    '''TARGET calendar
-
-    Holidays (see http://www.ecb.int):
-
-     * Saturdays
-     * Sundays
-     * New Year's Day, January 1st
-     * Good Friday (since 2000)
-     * Easter Monday (since 2000)
-     * Labour Day, May 1st (since 2000)
-     * Christmas, December 25th
-     * Day of Goodwill, December 26th (since 2000)
-     * December 31st (1998, 1999, and 2001)
-    '''
-
-    def __cinit__(self):
-        self._thisptr = <_calendar.Calendar*> new _calendar.TARGET()

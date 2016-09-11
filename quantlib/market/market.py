@@ -74,7 +74,7 @@ def make_rate_helper(market, quote, reference_date=None):
         forward_date = next_imm_date(reference_date, tenor)
 
         helper = FuturesRateHelper(
-            rate =SimpleQuote(quote_value),
+            price =SimpleQuote(quote_value),
             imm_date = qldate_from_pydate(forward_date),
             length_in_months = 3,
             calendar = market._floating_rate_index.fixing_calendar,
@@ -88,7 +88,7 @@ def make_rate_helper(market, quote, reference_date=None):
         # evaluation date, as for ED futures. To achieve this, we pass the
         # `imm_date` in the `tenor` field of the quote.
         helper = FuturesRateHelper(
-            rate=SimpleQuote(quote_value),
+            price=SimpleQuote(quote_value),
             imm_date=tenor,
             length_in_months=3,
             calendar=market._floating_rate_index.fixing_calendar,
@@ -274,16 +274,16 @@ class IborMarket(FixedIncomeMarket):
         return self._params.settlement_days
 
     @property
-    def fixed_rate_frequency(self):
-        return self._params.fixed_rate_frequency
+    def fixed_leg_period(self):
+        return self._params.fixed_leg_period
 
     @property
-    def fixed_rate_convention(self):
-        return self._params.fixed_instrument_convention
+    def fixed_leg_convention(self):
+        return self._params.fixed_leg_convention
 
     @property
-    def fixed_rate_daycounter(self):
-        return self._params.fixed_rate_daycounter
+    def fixed_leg_daycount(self):
+        return self._params.fixed_leg_daycount
 
     @property
     def termstructure_daycounter(self):
@@ -301,9 +301,9 @@ class IborMarket(FixedIncomeMarket):
         output = \
             "Ibor Market %s\n" % self._name + \
             "Number of settlement days: %d\n" % self._params.settlement_days +\
-            "Fixed rate frequency: %s\n" % self._params.fixed_rate_frequency +\
-            "Fixed rate convention: %s\n" % self._params.fixed_instrument_convention +\
-            "Fixed rate daycount: %s\n" % self._params.fixed_instrument_daycounter +\
+            "Fixed leg period: %s\n" % self._params.fixed_leg_period +\
+            "Fixed leg convention: %s\n" % self._params.fixed_leg_convention +\
+            "Fixed leg daycount: %s\n" % self._params.fixed_leg_daycount +\
             "Term structure daycount: %s\n" % self._termstructure_daycount + \
             "Floating rate index: %s\n" % self._floating_rate_index + \
             "Deposit daycount: %s\n" % self._deposit_daycount + \

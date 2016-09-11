@@ -3,8 +3,8 @@ from .unittest_tools import unittest
 from quantlib.interest_rate import InterestRate
 
 from quantlib.compounding import Continuous, Compounded
-from quantlib.time.api import Actual360, Monthly, NoFrequency, Once
-
+from quantlib.time.api import Actual360, Monthly, NoFrequency, Once, Thirty360
+from quantlib.time.daycounters.thirty360 import Thirty360, ITALIAN
 
 class InterestRateTestCase(unittest.TestCase):
 
@@ -21,14 +21,14 @@ class InterestRateTestCase(unittest.TestCase):
 
         interest_rate = InterestRate(rate, counter, compounding, frequency)
 
-        self.assertAlmostEquals(interest_rate.rate, rate)
-        self.assertEquals(interest_rate.compounding, compounding)
+        self.assertAlmostEqual(interest_rate.rate, rate)
+        self.assertEqual(interest_rate.compounding, compounding)
 
         # Returns NoFrequency when it does not make sense
-        self.assertEquals(interest_rate.frequency, NoFrequency)
+        self.assertEqual(interest_rate.frequency, NoFrequency)
 
         # Broken check. DayCoonter != Actual360
-        self.assertEquals(interest_rate.day_counter, Actual360())
+        self.assertEqual(interest_rate.day_counter, Actual360())
 
     def test_create_interest_rate_compounded(self):
 
@@ -39,9 +39,9 @@ class InterestRateTestCase(unittest.TestCase):
 
         interest_rate = InterestRate(rate, counter, compounding, frequency)
 
-        self.assertAlmostEquals(interest_rate.rate, rate)
-        self.assertEquals(interest_rate.compounding, compounding)
-        self.assertEquals(interest_rate.frequency, Monthly)
+        self.assertAlmostEqual(interest_rate.rate, rate)
+        self.assertEqual(interest_rate.compounding, compounding)
+        self.assertEqual(interest_rate.frequency, Monthly)
 
     def test_create_interest_rate_compounded_error(self):
 
@@ -53,6 +53,14 @@ class InterestRateTestCase(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 InterestRate(rate, counter, compounding, frequency)
 
+    def test_create_intereste_rate_with_daycounter_convention(self):
+        rate = 0.05
+        counter = Thirty360(ITALIAN)
+        compounding = Compounded
+        frequency = Monthly
+        interest_rate = InterestRate(rate, counter, compounding, frequency)
+        self.assertEqual(interest_rate.day_counter, counter)
+
     def test_repr(self):
 
         rate = 0.05
@@ -62,7 +70,7 @@ class InterestRateTestCase(unittest.TestCase):
 
         interest_rate = InterestRate(rate, counter, compounding, frequency)
 
-        self.assertEquals(
+        self.assertEqual(
             repr(interest_rate),
             "0.05 Actual/360 Monthly compounding"
         )

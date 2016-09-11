@@ -27,7 +27,6 @@ from quantlib.termstructures._helpers cimport BootstrapHelper, \
                                               RelativeDateBootstrapHelper
 
 cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
-
     ctypedef BootstrapHelper[YieldTermStructure] RateHelper
     ctypedef RelativeDateBootstrapHelper[YieldTermStructure] RelativeDateRateHelper
 
@@ -38,19 +37,19 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                           Calendar& calendar,
                           BusinessDayConvention convention,
                           bool endOfMonth,
-                          DayCounter& dayCounter)
+                          DayCounter& dayCounter) except +
         DepositRateHelper(Rate rate,
                           Period& tenor,
                           Natural fixingDays,
                           Calendar& calendar,
                           BusinessDayConvention convention,
                           bool endOfMonth,
-                          DayCounter& dayCounter)
+                          DayCounter& dayCounter) except +
 
         DepositRateHelper(Handle[Quote]& rate,
-                          shared_ptr[IborIndex]& iborIndex)
+                          shared_ptr[IborIndex]& iborIndex) except +
         DepositRateHelper(Rate rate,
-                          shared_ptr[IborIndex]& iborIndex)
+                          shared_ptr[IborIndex]& iborIndex) except +
 
     cdef cppclass FraRateHelper(RelativeDateRateHelper):
         FraRateHelper(Handle[Quote]& rate,
@@ -60,7 +59,15 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                       Calendar& calendar,
                       BusinessDayConvention convention,
                       bool endOfMonth,
-                      DayCounter& dayCounter)
+                      DayCounter& dayCounter) except +
+        FraRateHelper(Rate rate,
+                      Natural monthsToStart,
+                      Natural monthsToEnd,
+                      Natural fixingDays,
+                      Calendar& calendar,
+                      BusinessDayConvention convention,
+                      bool endOfMonth,
+                      DayCounter& dayCounter) except +
 
 
     cdef cppclass SwapRateHelper(RelativeDateRateHelper):
@@ -71,8 +78,10 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                        BusinessDayConvention fixedConvention,
                        DayCounter& fixedDayCount,
                        shared_ptr[_ib.IborIndex]& iborIndex,
-        )
-        SwapRateHelper(Handle[Quote]& rate,
+                       Handle[Quote]& spread,
+                       Period& fwdStart
+        ) except +
+        SwapRateHelper(Rate rate,
                        Period& tenor,
                        Calendar& calendar,
                        Frequency& fixedFrequency,
@@ -81,17 +90,15 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                        shared_ptr[_ib.IborIndex]& iborIndex,
                        Handle[Quote]& spread,
                        Period& fwdStart
-        )
+        ) except +
         SwapRateHelper(Handle[Quote]& rate,
                        shared_ptr[SwapIndex]& swapIndex,
-                       #Handle[Quote]& spread, # = Handle<Quote>(),
-                       #Period& fwdStart, # = 0*Days,
+                       Handle[Quote]& spread, # = Handle<Quote>(),
+                       Period& fwdStart, # = 0*Days,
                        # exogenous discounting curve
                        #Handle[YieldTermStructure]& discountingCurve
                                             #= Handle<YieldTermStructure>()
-        )
-
-
+        ) except +
         SwapRateHelper(Rate rate,
                        shared_ptr[SwapIndex]& swapIndex,
                        Handle[Quote]& spread, # = Handle<Quote>(),
@@ -99,7 +106,7 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                        # exogenous discounting curve
                        #Handle[YieldTermStructure]& discountingCurve
                                             #= Handle<YieldTermStructure>()
-        )
+        ) except +
 
 
     cdef cppclass FuturesRateHelper(RateHelper):
@@ -109,5 +116,15 @@ cdef extern from 'ql/termstructures/yield/ratehelpers.hpp' namespace 'QuantLib':
                           Calendar& calendar,
                           BusinessDayConvention convention,
                           bool endOfMonth,
-                          DayCounter& dayCounter) except +
-
+                          DayCounter& dayCounter,
+                          Handle[Quote]& convexity_adjustment,
+        ) except +
+        FuturesRateHelper(Real price,
+                          Date& immDate,
+                          Natural lengthInMonths,
+                          Calendar& calendar,
+                          BusinessDayConvention convention,
+                          bool endOfMonth,
+                          DayCounter& dayCounter,
+                          Rate convexity_adjustment,
+        ) except +

@@ -1,11 +1,9 @@
-"""
- Copyright (C) 2011, Enthought Inc
- Copyright (C) 2011, Patrick Henaff
-
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
-"""
+# Copyright (C) 2011, Enthought Inc
+# Copyright (C) 2011, Patrick Henaff
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 include 'types.pxi'
 
@@ -18,7 +16,7 @@ from quantlib import compounding
 from quantlib.time.api import NoFrequency, Once
 from quantlib.time.date import frequency_to_str
 from quantlib.time.daycounter cimport DayCounter
-from quantlib.util.compat cimport py_string_from_utf8_array
+cimport quantlib.time._daycounter as _daycounter
 
 cdef class InterestRate:
     """ This class encapsulate the interest rate compounding algebra.
@@ -70,11 +68,9 @@ cdef class InterestRate:
 
     property day_counter:
         def __get__(self):
-            cdef _ir.DayCounter dc = self._thisptr.get().dayCounter()
-
-            return DayCounter.from_name(
-                py_string_from_utf8_array(dc.name().c_str())
-            )
+            cdef DayCounter dc = DayCounter()
+            dc._thisptr = new _daycounter.DayCounter(self._thisptr.get().dayCounter())
+            return dc
 
     def __repr__(self):
         if self.rate == None:
@@ -105,8 +101,6 @@ cdef class InterestRate:
             ValueError('unknown compounding convention ({0})'.format(self.compounding))
         return "{0:.2f} {1} {2}".format(
             self.rate,
-            py_string_from_utf8_array(
-                self._thisptr.get().dayCounter().name().c_str()
-            ),
+            self._thisptr.get().dayCounter().name().decode('utf-8'),
             cpd_str
         )

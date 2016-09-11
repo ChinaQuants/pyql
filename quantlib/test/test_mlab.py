@@ -59,29 +59,29 @@ class MLabTestCase(unittest.TestCase):
                      option_type=('Call', 'Put'),
                      dividend=0.045)
 
-        self.assertAlmostEquals(p[0], 22.6716, 3)
-        self.assertAlmostEquals(p[1], 36.7626, 3)
+        self.assertAlmostEqual(p[0], 22.6716, 3)
+        self.assertAlmostEqual(p[1], 36.7626, 3)
 
         v = blsimpv(p, spot=585, strike=600, risk_free_rate=.05,
                      time=1 / 4.,
                      option_type=('Call', 'Put'),
                      dividend=0.045)
 
-        self.assertAlmostEquals(v[0], .25, 3)
-        self.assertAlmostEquals(v[1], .25, 3)
+        self.assertAlmostEqual(v[0], .25, 3)
+        self.assertAlmostEqual(v[1], .25, 3)
 
     def test_yield(self):
 
-        rates_data = [('Libor1M',SimpleQuote(.01)),
-                  ('Libor3M', SimpleQuote(.015)),
-                  ('Libor6M', SimpleQuote(.017)),
-                  ('Swap1Y', SimpleQuote(.02)),
-                  ('Swap2Y', SimpleQuote(.03)),
-                  ('Swap3Y', SimpleQuote(.04)),
-                  ('Swap5Y', SimpleQuote(.05)),
-                  ('Swap7Y', SimpleQuote(.06)),
-                  ('Swap10Y', SimpleQuote(.07)),
-                  ('Swap20Y', SimpleQuote(.08))]
+        rates_data = [('Libor1M',.01),
+                  ('Libor3M', .015),
+                  ('Libor6M', .017),
+                  ('Swap1Y', .02),
+                  ('Swap2Y', .03),
+                  ('Swap3Y', .04),
+                  ('Swap5Y', .05),
+                  ('Swap7Y', .06),
+                  ('Swap10Y', .07),
+                  ('Swap20Y', .08)]
 
         settlement_date = pydate_to_qldate('01-Dec-2013')
         rate_helpers = []
@@ -149,8 +149,8 @@ class MLabTestCase(unittest.TestCase):
         cf = res[0]
         pydate = date(1993, 6, 15)
 
-        self.assertEquals(cf[6], 100.0)
-        self.assertEquals(dt[1], pydate)
+        self.assertEqual(cf[6], 100.0)
+        self.assertEqual(dt[1], pydate)
 
     def test_greeks(self):
         """
@@ -189,10 +189,8 @@ class MLabTestCase(unittest.TestCase):
                    'Swap10Y',
                    'Swap20Y',
                    'Swap30Y']
-        yields = [SimpleQuote(.01), SimpleQuote(.015), SimpleQuote(.02), SimpleQuote(.03), SimpleQuote(.04),
-              SimpleQuote(.05), SimpleQuote(.06), SimpleQuote(.07), SimpleQuote(.08), SimpleQuote(.09),
-              SimpleQuote(.1)]
-
+        yields = [float(x+1)/100 for x in range(len(instruments))]
+        
         pricing_date = '01-dec-2013'
         dt, rates = zbt_libor_yield(instruments, yields, pricing_date,
                     compounding_freq='Continuous',

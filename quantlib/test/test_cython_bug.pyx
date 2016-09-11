@@ -9,8 +9,9 @@ from quantlib.time._date cimport (
 )
 from quantlib.time._period cimport Years, Period, Annual, Days
 from quantlib.time._calendar cimport (
-    Calendar, TARGET, Unadjusted, ModifiedFollowing, Following
+    Calendar, Unadjusted, ModifiedFollowing, Following
 )
+from quantlib.time.calendars._target cimport TARGET
 from quantlib.time._schedule cimport Schedule, Backward
 from quantlib.time.date cimport date_from_qldate, Date
 from quantlib.time.daycounters._actual_actual cimport ISMA, ActualActual
@@ -72,14 +73,14 @@ cdef FixedRateBond* get_bond_for_evaluation_date(QlDate& in_date):
 
     cdef QlDate issue_date = QlDate(10, Jul, 2006)
 
-    cdef vector[Rate]* coupons = new vector[Rate]()
+    cdef vector[Rate] coupons
     coupons.push_back(coupon_rate)
 
     cdef FixedRateBond* bond = new FixedRateBond(
             settlement_days,
 		    face_amount,
 		    fixed_bond_schedule,
-		    deref(coupons),
+		    coupons,
             ActualActual(ISMA),
 		    Following,
             redemption,

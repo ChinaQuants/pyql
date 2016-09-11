@@ -1,7 +1,15 @@
-from quantlib.handle cimport shared_ptr
-from quantlib.termstructures._default_term_structure cimport DefaultProbabilityTermStructure
+from quantlib.termstructures.default_term_structure cimport DefaultProbabilityTermStructure
 
-cdef class PiecewiseDefaultCurve:
+cdef enum Interpolator:
+    Linear
+    LogLinear
+    BackwardFlat
 
-    cdef shared_ptr[DefaultProbabilityTermStructure]* _thisptr
+cdef enum ProbabilityTrait:
+    HazardRate
+    DefaultDensity
+    SurvivalProbability
 
+cdef class PiecewiseDefaultCurve(DefaultProbabilityTermStructure):
+    cdef readonly ProbabilityTrait _trait
+    cdef readonly Interpolator _interpolator

@@ -1,7 +1,9 @@
 from .unittest_tools import unittest
 
-from quantlib.time.daycounter import (
-    Actual360, DayCounter, SimpleDayCounter
+from quantlib.time.daycounter import DayCounter
+
+from quantlib.time.daycounters.simple import (
+    Actual360, SimpleDayCounter
 )
 
 from quantlib.time.daycounters.actual_actual import (
@@ -110,7 +112,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 0.410958904110
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date)
         )
@@ -123,7 +125,7 @@ class TestActualActual(unittest.TestCase):
         ref_end = Date(1,July,1999)
         expected_result = 0.410958904110
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date, ref_start, ref_end)
         )
@@ -135,7 +137,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 0.410958904110
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date)
         )
@@ -147,7 +149,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 1.001377348600
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date)
         )
@@ -162,7 +164,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 1.000000000000
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date, ref_start, ref_end)
         )
@@ -175,7 +177,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 1.000000000000
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date)
         )
@@ -191,7 +193,7 @@ class TestActualActual(unittest.TestCase):
         for index, period in enumerate(periods):
             end = first + Period(period,  Months)
             calculated = day_counter.year_fraction(first,end)
-            self.assertAlmostEquals(
+            self.assertAlmostEqual(
                 expected_times[index], calculated
             )
 
@@ -204,7 +206,7 @@ class TestActualActual(unittest.TestCase):
 
         expected_result = 1.000000000000
 
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             expected_result,
             day_counter.year_fraction(from_date, to_date)
         )
@@ -215,7 +217,7 @@ class TestActualActual(unittest.TestCase):
         day_counter = Thirty360(EUROBONDBASIS)
 
         a = Thirty360()
-        self.assertNotEquals(day_counter.name(), a.name())
+        self.assertNotEqual(day_counter.name(), a.name())
         self.assertNotEqual(day_counter, Thirty360())
         self.assertEqual(day_counter, Thirty360(EUROBONDBASIS))
 

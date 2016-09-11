@@ -1,11 +1,9 @@
-"""
- Copyright (C) 2013, Enthought Inc
- Copyright (C) 2013, Patrick Henaff
-
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
-"""
+# Copyright (C) 2013, Enthought Inc
+# Copyright (C) 2013, Patrick Henaff
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 include 'types.pxi'
 
@@ -16,7 +14,6 @@ from libcpp.string cimport string
 cimport quantlib.time._calendar as _calendar
 
 from quantlib.time.date cimport Date
-from quantlib.util.compat cimport py_string_from_utf8_array as to_pystr
 
 from quantlib.time.calendar_registry import calendar_from_internal_name
 from quantlib.time.api import calendar_from_name
@@ -35,16 +32,13 @@ cdef class Index:
 
     property name:
        def __get__(self):
-           return to_pystr(self._thisptr.get().name().c_str())
+           return self._thisptr.get().name().decode('utf-8')
 
     property fixing_calendar:
         def __get__(self):
             cdef _calendar.Calendar fc
             fc = self._thisptr.get().fixingCalendar()
-            cdef string _calendar_name = fc.name()
-            return calendar_from_internal_name(
-                to_pystr(_calendar_name.c_str())
-            )
+            return calendar_from_internal_name(fc.name().decode('utf-8'))
 
     def is_valid_fixing_date(self, Date fixingDate):
         return self._thisptr.get().isValidFixingDate(
@@ -58,4 +52,3 @@ cdef class Index:
         self._thisptr.get().addFixing(
             deref(fixingDate._thisptr.get()), fixing, forceOverwrite
         )
-
